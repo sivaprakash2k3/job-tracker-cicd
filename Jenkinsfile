@@ -28,7 +28,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonar-server') {
-                    sh './mvnw -B sonar:sonar -Dsonar.projectKey=job-tracker-cicd -Dsonar.projectName=job-tracker-cicd'
+                    sh './mvnw -B org.sonarsource.scanner.maven:sonar-maven-plugin:5.7.0.6970:sonar -Dsonar.projectKey=job-tracker-cicd -Dsonar.projectName=job-tracker-cicd'
                 }
             }
         }
