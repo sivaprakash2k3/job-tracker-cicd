@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        IMAGE  = 'sivapraksh7/job-tracker'   // CHANGE ME
+        IMAGE  = 'sivaprakash7/job-tracker'   // CHANGE ME
         APP_IP = '10.0.8.95'                               // CHANGE ME: app-server PRIVATE IP
     }
 
