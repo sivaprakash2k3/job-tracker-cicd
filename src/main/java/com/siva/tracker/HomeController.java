@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class HomeController {
     @GetMapping("/")
     public String home() {
-        return "Job Tracker is running. Try /applications or /actuator/health";
+        return "Job Tracker v2 - deployed automatically by Jenkins. Try /applications or /actuator/health";
     }
 }
