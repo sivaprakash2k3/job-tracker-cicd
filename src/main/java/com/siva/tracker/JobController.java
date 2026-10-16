@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/applications")
+@RequestMapping("/api/applications")
 public class JobController {
     private final JobRepository repository;
 
