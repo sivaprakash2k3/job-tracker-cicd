@@ -56,7 +56,7 @@ pipeline {
             steps {
                 sshagent(credentials: ['app-server-ssh']) {
                     sh '''
-                        ssh -o StrictHostKeyChecking=no ubuntu@$APP_IP "docker pull $IMAGE:$BUILD_NUMBER && (docker rm -f job-tracker 2>/dev/null; docker run -d --name job-tracker --restart unless-stopped -p 8081:8081 $IMAGE:$BUILD_NUMBER)"
+                        ssh -o StrictHostKeyChecking=no ubuntu@$APP_IP "docker pull $IMAGE:$BUILD_NUMBER && (docker rm -f job-tracker 2>/dev/null; docker run -d --name job-tracker --restart unless-stopped -e SPRING_PROFILES_ACTIVE=aws -p 8081:8081 $IMAGE:$BUILD_NUMBER)"
                     '''
                 }
             }
