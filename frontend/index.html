@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Job Application Tracker</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 720px; margin: 40px auto; padding: 0 16px; color: #222; }
+  h1 { margin-bottom: 4px; }
+  .sub { color: #666; margin-top: 0; }
+  form { display: flex; gap: 8px; flex-wrap: wrap; margin: 20px 0; }
+  input, select, button { padding: 8px; font-size: 14px; }
+  input { flex: 1; min-width: 140px; }
+  button { background: #2563eb; color: #fff; border: 0; border-radius: 4px; cursor: pointer; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 8px; border-bottom: 1px solid #ddd; }
+  #msg { color: #b91c1c; min-height: 20px; }
+</style>
+</head>
+<body>
+  <h1>Job Application Tracker</h1>
+  <p class="sub">Page on S3 + CloudFront, API on EC2, data in DynamoDB</p>
+
+  <form id="form">
+    <input id="company" placeholder="Company" required>
+    <input id="role" placeholder="Role" required>
+    <select id="status">
+      <option>APPLIED</option>
+      <option>INTERVIEW</option>
+      <option>OFFER</option>
+      <option>REJECTED</option>
+    </select>
+    <button type="submit">Add</button>
+  </form>
+
+  <div id="msg"></div>
+
+  <table>
+    <thead><tr><th>Company</th><th>Role</th><th>Status</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+<script>
+  const API = '/api/applications';
+  const rows = document.getElementById('rows');
+  const msg = document.getElementById('msg');
+
+  async function load() {
+    try {
+      const res = await fetch(API);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const items = await res.json();
+      rows.innerHTML = '';
+      for (const item of items) {
+        const tr = document.createElement('tr');
+        for (const value of [item.company, item.role, item.status]) {
+          const td = document.createElement('td');
+          td.textContent = value;
+          tr.appendChild(td);
+        }
+        rows.appendChild(tr);
+      }
+      msg.textContent = '';
+    } catch (e) {
+      msg.textContent = 'Could not load applications: ' + e.message;
+    }
+  }
+
+  document.getElementById('form').addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    try {
+      const res = await fetch(API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          company: document.getElementById('company').value,
+          role: document.getElementById('role').value,
+          status: document.getElementById('status').value
+        })
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      ev.target.reset();
+      await load();
+    } catch (e) {
+      msg.textContent = 'Could not save: ' + e.message;
+    }
+  });
+
+  load();
+</script>
+</body>
+</html>
